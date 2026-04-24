@@ -1,5 +1,5 @@
 {
-	"name": "svelte-gridstack",
+	"name": "@mikolajbadyl/svelte-gridstack",
 	"version": "0.1.0",
 	"description": "Svelte 5 wrapper for gridstack.js - reactive dashboard layout with drag-and-drop",
 	"license": "MIT",
