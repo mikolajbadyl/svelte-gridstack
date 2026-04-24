@@ -45,7 +45,7 @@
 
 	onMount(async () => {
 		await tick();
-		const g = GridStack.init({ ...options }, gridEl);
+		const g = GridStack.init({ ...options, auto: false }, gridEl);
 		grid = g;
 
 		const bindings: [string, EventCallback][] = [
@@ -77,7 +77,17 @@
 	});
 
 	export function getGridInstance() { return grid; }
-	export function save() { return grid?.save(); }
+	export function save() {
+		const saved = grid?.save();
+		if (!saved) return saved;
+		// gridstack's removeInternalForSave deletes w when w===1 or w===minW.
+		// Merge back widget data so consumers get complete layout info.
+		return saved.map((item, i) => {
+			const src = widgets[i];
+			if (!src) return item;
+			return { ...src, ...item, id: item.id ?? (src as Record<string, unknown>).id };
+		});
+	}
 	export function load(items: GridStackWidget[]) { return grid?.load(items); }
 	export function compact() { grid?.compact(); }
 	export function float(val: boolean) { grid?.float(val); }
